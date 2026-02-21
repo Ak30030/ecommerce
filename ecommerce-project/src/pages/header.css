@@ -71,7 +71,7 @@
   flex: 1;
   width: 0;
   font-size: 16px;
-  height: 38px;
+  height: 42px;
   padding-left: 15px;
   border: none;
   border-top-left-radius: 5px;
@@ -83,17 +83,20 @@
 .header .search-button {
   background-color: rgb(186, 255, 190);
   border: none;
-  width: 45px;
-  height: 40px;
+  width: 56px;
+  height: 42px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .header .search-icon {
   height: 20px;
-  margin-left: 0px;
-  margin-top: 3px;
+  width: 20px;
+  margin: 0;
 }
 
 .header .right-section {
