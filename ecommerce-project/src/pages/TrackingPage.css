@@ -1,0 +1,108 @@
+/* Tracking page styles */
+.tracking-page {
+  margin-top: 60px;
+  padding: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.order-tracking {
+  border: 1px solid rgb(240, 240, 240);
+  border-radius: 8px;
+  padding: 24px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-orders-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.delivery-date {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: rgb(8, 79, 45);
+}
+
+.product-info {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: rgb(33, 33, 33);
+}
+
+.product-image {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  margin: 16px 0;
+  display: block;
+}
+
+.progress-labels-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 0 8px 0;
+}
+
+.progress-label {
+  font-size: 14px;
+  color: rgb(150, 150, 150);
+  text-align: center;
+  flex: 1;
+}
+
+.progress-label.current-status {
+  color: rgb(25, 135, 84);
+  font-weight: 700;
+}
+
+.progress-bar-container {
+  position: relative;
+  height: 4px;
+  background-color: rgb(240, 240, 240);
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+.progress-bar {
+  position: absolute;
+  height: 100%;
+  width: 66%; /* 2 out of 3 steps completed */
+  background-color: rgb(25, 135, 84);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .tracking-page {
+    padding: 16px;
+  }
+
+  .order-tracking {
+    padding: 16px;
+  }
+
+  .delivery-date {
+    font-size: 20px;
+  }
+
+  .product-info {
+    font-size: 16px;
+  }
+
+  .progress-labels-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .progress-label {
+    margin-bottom: 4px;
+  }
+}
