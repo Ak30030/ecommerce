@@ -4,39 +4,7 @@ import './HomePage.css';
 export function HomePage() {
     return(
             <>
-        <tittle>Ecommerce Project</tittle>
-
-    <div className ="header">
-        <div className ="left-section">
-            <div className ="header-link">
-            <img className ="logo"
-                src="images/logo-white.png" />
-            <img className ="mobile-logo"
-                src="images/mobile-logo-white.png" />
-            </div>
-        </div>
-
-        <div className ="middle-section">
-            <input className ="search-bar" type="text" placeholder="Search" />
-
-            <button className ="search-button">
-            <img className ="search-icon" src="images/icons/search-icon.png" />
-            </button>
-        </div>
-
-        <div className ="right-section">
-            <div className ="orders-link header-link">
-
-            <span className ="orders-text">Orders</span>
-            </div>
-
-            <div className ="cart-link header-link">
-            <img className ="cart-icon" src="images/icons/cart-icon.png" />
-            <div className ="cart-quantity">3</div>
-            <div className ="cart-text">Cart</div>
-            </div>
-        </div>
-        </div>
+             <tittle>Ecommerce Project</tittle>
 
         <div className ="home-page">
         <div className ="products-grid">

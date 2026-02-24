@@ -1,40 +1,27 @@
-import './header.css';
-import { Link } from 'react-router';
+import {Header} from '../components/header';
+import './OrdersPage.css';
 
 export function OrdersPage() {
     return (
         <>
-            <div className="header">
-                <div className="left-section">
-                    <Link to="/" className="header-link">
-                        <img className="logo" src="images/logo-white.png" />
-                        <img className="mobile-logo" src="images/mobile-logo-white.png" />
-                    </Link>
+            <title>Orders</title>
+            
+            <Header/>
+
+            <div className="orders-page">
+                <div className="page-title">Your orders</div>
+                
+                <div className="orders-grid">
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '40px 20px',
+                        color: '#999',
+                        fontSize: '18px'
+                    }}>
+                        <p>No orders yet.</p>
+                        <p>Your orders will appear here.</p>
+                    </div>
                 </div>
-
-                <div className="middle-section">
-                    <input className="search-bar" type="text" placeholder="Search" />
-                    <button className="search-button">
-                        <img className="search-icon" src="images/icons/search-icon.png" />
-                    </button>
-                </div>
-
-                <div className="right-section">
-                    <Link to="/orders" className="orders-link header-link">
-                        <span className="orders-text">Orders</span>
-                    </Link>
-
-                    <Link to="/checkout" className="cart-link header-link">
-                        <img className="cart-icon" src="images/icons/cart-icon.png" />
-                        <div className="cart-quantity">3</div>
-                        <div className="cart-text">Cart</div>
-                    </Link>
-                </div>
-            </div>
-
-            <div style={{ marginTop: '80px', padding: '20px', textAlign: 'center' }}>
-                <h1>Your Orders</h1>
-                <p>Your orders will appear here.</p>
             </div>
         </>
     );

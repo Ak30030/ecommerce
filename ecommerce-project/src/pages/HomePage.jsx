@@ -1,11 +1,12 @@
-import './header.css';
+import {Header} from '../components/header';
 import './HomePage.css';
 import { Link } from 'react-router';
+import './HomePage.css';
+
 
 export function HomePage() {
     return(
-            <>
-        <tittle>Ecommerce Project</tittle>
+        <>
 
     <div className ="header">
         <div className ="left-section">
