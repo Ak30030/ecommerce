@@ -1,6 +1,6 @@
 import { Header } from "../components/header";
 import "./OrdersPage.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const orders = [
   {
