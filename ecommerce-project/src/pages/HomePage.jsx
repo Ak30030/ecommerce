@@ -6,16 +6,24 @@ import { Link } from 'react-router';
 
 export function HomePage() {
     const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
     axios.get('http://localhost:3000/api/products')
     .then((response) => {
    setProducts(response.data);
     })
+
+    axios.get('http://localhost:3000/api/cart-items')
+    .then((response) => {
+        setCart(response.data);
+    })
+
 } , []);
 
     return (
         <>
+        
             <div className="header">
                 <div className="left-section">
                     <Link to="/" className="header-link">
@@ -46,6 +54,8 @@ export function HomePage() {
                     </Link>
                 </div>
             </div>
+
+            <Header Cart={cart} />
 
             <div className="home-page">
                 <div className="products-grid">
