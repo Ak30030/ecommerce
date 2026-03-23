@@ -24,9 +24,9 @@ export function HomePage({cart}) {
                 <div className="left-section">
                     <Link to="/" className="header-link">
                         <img className="logo"
-                            src="images/logo-white.png" />
+                            src="/images/logo-white.png" />
                         <img className="mobile-logo"
-                            src="images/mobile-logo-white.png" />
+                            src="/images/mobile-logo-white.png" />
                     </Link>
                 </div>
 
@@ -34,7 +34,7 @@ export function HomePage({cart}) {
                     <input className="search-bar" type="text" placeholder="Search" />
 
                     <button className="search-button">
-                        <img className="search-icon" src="images/icons/search-icon.png" />
+                        <img className="search-icon" src="/images/icons/search-icon.png" />
                     </button>
                 </div>
 
@@ -44,7 +44,7 @@ export function HomePage({cart}) {
                     </Link>
 
                     <Link to="/checkout" className="cart-link header-link">
-                        <img className="cart-icon" src="images/icons/cart-icon.png" />
+                        <img className="cart-icon" src="/images/icons/cart-icon.png" />
                         <div className="cart-quantity">3</div>
                         <div className="cart-text">Cart</div>
                     </Link>
@@ -58,8 +58,10 @@ export function HomePage({cart}) {
                     {products.map((product) => (
                         <div key={product.id} className="product-container">
                             <div className="product-image-container">
-                                <img className="product-image"
-                                    src={product.image} />
+                                <img
+                                    className="product-image"
+                                    src={product.image?.startsWith('/') ? product.image : `/${product.image}`}
+                                />
                             </div>
 
                             <div className="product-name limit-text-to-2-lines">

@@ -218,3 +218,137 @@
     padding: 12px;
   }
 }
+.orders-page-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: Arial, sans-serif;
+}
+
+.orders-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Order Card */
+.order-card {
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Summary Bar */
+.order-summary-bar {
+  display: flex;
+  gap: 40px;
+  background-color: #f0f2f2;
+  padding: 14px 20px;
+  border-bottom: 1px solid #d5d9d9;
+  flex-wrap: wrap;
+}
+
+.order-summary-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.summary-value {
+  font-size: 14px;
+  color: #111;
+  margin-top: 2px;
+}
+
+.order-id {
+  margin-left: auto;
+}
+
+/* Items List */
+.order-items-list {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.order-item-img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.order-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.order-item-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: #111;
+}
+
+.order-item-delivered {
+  font-size: 13px;
+  color: #007600;
+  font-weight: 500;
+}
+
+.order-item-qty {
+  font-size: 13px;
+  color: #555;
+}
+
+/* Buttons */
+.btn-add-to-cart {
+  margin-top: 6px;
+  background-color: #007600;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  width: fit-content;
+}
+
+.btn-add-to-cart:hover {
+  background-color: #005a00;
+}
+
+.order-item-actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-track {
+  background-color: white;
+  border: 1px solid #d5d9d9;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.btn-track:hover {
+  background-color: #f7f8f8;
+}

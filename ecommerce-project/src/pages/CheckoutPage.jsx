@@ -30,8 +30,8 @@ axios.get('/api/payment-summary')
       <div className="header-content">
         <div className="checkout-header-left-section">
           <Link to="/">
-            <img className="logo" src="images/logo.png" />
-            <img className="mobile-logo" src="images/mobile-logo.png" />
+            <img className="logo" src="/images/logo.png" />
+            <img className="mobile-logo" src="/images/mobile-logo.png" />
           </Link>
         </div>
 
@@ -41,7 +41,7 @@ axios.get('/api/payment-summary')
         </div>
 
         <div className="checkout-header-right-section">
-          <img src="images/icons/checkout-lock-icon.png" />
+          <img src="/images/icons/checkout-lock-icon.png" />
         </div>
       </div>
     </div>
@@ -66,8 +66,10 @@ axios.get('/api/payment-summary')
               </div>
 
             <div className="cart-item-details-grid">
-              <img className="product-image"
-                src={cartItem.product.image} />
+              <img
+                className="product-image"
+                src={cartItem.product.image?.startsWith('/') ? cartItem.product.image : `/${cartItem.product.image}`}
+              />
 
               <div className="cart-item-details">
                 <div className="product-name">
