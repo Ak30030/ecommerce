@@ -1,7 +1,9 @@
 import './header.css';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
 
-export function Header({cart = []}) {
+export function Header({searchQuery, setSearchQuery, onSearch, isLoading = false}) {
+    const { cart } = useCart();
 
     let totalQuantity = 0;
 
@@ -14,19 +16,37 @@ export function Header({cart = []}) {
     <div className ="header">
         <div className ="left-section">
             <Link to="/" className ="header-link">
-            <img className ="logo"
-                src="/images/logo-white.png" />
-            <img className ="mobile-logo"
-                src="/images/mobile-logo-white.png" />
+              <img
+                className="logo"
+                src="/images/mini-shop-logo.jpg"
+                alt="Mini Shop Logo"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+              <img
+                className="mobile-logo"
+                src="/images/mini-shop-logo.jpg"
+                alt="Mini Shop Mobile Logo"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+              <span className="brand-name">mini shop</span>
             </Link>
         </div>
 
         <div className ="middle-section">
-            <input className ="search-bar" type="text" placeholder="Search" />
+            {isLoading ? (
+                <div className="header-loading">
+                    <div className="header-loading-spinner"></div>
+                    <span className="header-loading-text">Loading...</span>
+                </div>
+            ) : (
+                <>
+                    <input className ="search-bar" type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
-            <button className ="search-button">
-            <img className ="search-icon" src="/images/icons/search-icon.png" />
-            </button>
+                    <button className ="search-button" onClick={onSearch}>
+                    <img className ="search-icon" src="/images/icons/search-icon.png" />
+                    </button>
+                </>
+            )}
         </div>
 
         <div className ="right-section">

@@ -1,7 +1,10 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Header } from "../components/header";
+import { Link } from "react-router-dom";
+import { useCart } from "../contexts/CartContext";
 import "./OrdersPage.css";
+import './Loading.css';
 
 const hardcodedOrders = [
   {
@@ -34,12 +37,17 @@ const hardcodedOrders = [
   }
 ];
 
-export function OrdersPage({ cart }) {
+export function OrdersPage() {
+  const { fetchCart } = useCart();
   const [orders, setOrders] = useState(hardcodedOrders);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/api/orders?expand=products')
-      .then((response) => {
+    const loadOrders = async () => {
+      const startTime = Date.now();
+      try {
+        console.log('Starting to load orders...');
+        const response = await axios.get('/api/orders?expand=products');
         console.log('API response:', response.data);
 
         const normalized = response.data.map((order) => ({
@@ -57,18 +65,45 @@ export function OrdersPage({ cart }) {
         }));
 
         setOrders(normalized);
-      });
+      } catch (error) {
+        console.error('Error loading orders:', error);
+      } finally {
+        // Ensure loading screen shows for at least 1 second
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, 1000 - elapsed);
+        setTimeout(() => {
+          console.log('Setting isLoading to false for orders');
+          setIsLoading(false);
+        }, remaining);
+      }
+    };
+    loadOrders();
   }, []);
+
+  const handleAddToCart = (productId, quantity) => {
+    axios.post('/api/cart-items', { productId, quantity })
+      .then(() => {
+        alert('Added to cart!');
+        fetchCart();
+      })
+      .catch(error => console.error('Error adding to cart:', error));
+  };
 
   return (
     <>
       <title>Orders</title>
-      <Header cart={cart} />
+      <Header isLoading={isLoading} />
 
       <div className="orders-page-container">
         <h1 className="orders-title">Your Orders</h1>
 
-        {orders.map((order) => (
+        {orders.length === 0 ? (
+          <div className="no-orders">
+            <p>You have no orders yet.</p>
+            <Link to="/">Start shopping</Link>
+          </div>
+        ) : (
+          orders.map((order) => (
           <div key={order.id} className="order-card">
 
             {/* Order Summary Bar */}
@@ -109,18 +144,20 @@ export function OrdersPage({ cart }) {
                         : `Arriving on: ${item.arriving}`}
                     </div>
                     <div className="order-item-qty">Quantity: {item.quantity}</div>
-                    <button className="btn-add-to-cart">🛒 Add to Cart</button>
+                    <button className="btn-add-to-cart" onClick={() => handleAddToCart(item.productId || item.id, 1)}>🛒 Add to Cart</button>
                   </div>
 
                   <div className="order-item-actions">
-                    <button className="btn-track">Track package</button>
+                    <button className="btn-track" onClick={() => window.location.href = `/tracking?orderId=${order.id}`}>Track package</button>
                   </div>
                 </div>
               ))}
             </div>
 
           </div>
-        ))}
+        ))
+        )
+      }
       </div>
     </>
   );

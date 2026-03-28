@@ -4,54 +4,62 @@ import { Header } from '../components/header';
 import { formatMoney } from '../utils/money';   
 import './HomePage.css';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import './Loading.css';
 
-export function HomePage({cart}) {
+export function HomePage() {
     const [products, setProducts] = useState([]);
+    const [addedToCart, setAddedToCart] = useState({});
+    const [searchQuery, setSearchQuery] = useState('');
+    const { fetchCart } = useCart();
+    const [isLoading, setIsLoading] = useState(true);
    
 
     useEffect(() => {
-    axios.get('/api/products')
-    .then((response) => {
-   setProducts(response.data);
-    })
+        const loadProducts = async () => {
+            const startTime = Date.now();
+            try {
+                console.log('Starting to load products...');
+                const response = await axios.get('/api/products');
+                console.log('Products loaded successfully');
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error loading products:', error);
+            } finally {
+                // Ensure loading screen shows for at least 1 second
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, 1000 - elapsed);
+                setTimeout(() => {
+                    console.log('Setting isLoading to false for home');
+                    setIsLoading(false);
+                }, remaining);
+            }
+        };
+        loadProducts();
+    }, []);
 
-} , []);
+    const handleAddToCart = (productId, quantity) => {
+        axios.post('/api/cart-items', { productId, quantity })
+            .then(() => {
+                setAddedToCart(prev => ({ ...prev, [productId]: true }));
+                setTimeout(() => setAddedToCart(prev => ({ ...prev, [productId]: false })), 2000);
+                fetchCart(); // Update cart after adding
+            })
+            .catch(error => console.error('Error adding to cart:', error));
+    };
+
+    const handleSearch = () => {
+        axios.get(`/api/products?search=${encodeURIComponent(searchQuery)}`)
+            .then((response) => {
+                setProducts(response.data);
+            })
+            .catch(error => console.error('Error searching products:', error));
+    };
 
     return (
         <>
         
-            <div className="header">
-                <div className="left-section">
-                    <Link to="/" className="header-link">
-                        <img className="logo"
-                            src="/images/logo-white.png" />
-                        <img className="mobile-logo"
-                            src="/images/mobile-logo-white.png" />
-                    </Link>
-                </div>
-
-                <div className="middle-section">
-                    <input className="search-bar" type="text" placeholder="Search" />
-
-                    <button className="search-button">
-                        <img className="search-icon" src="/images/icons/search-icon.png" />
-                    </button>
-                </div>
-
-                <div className="right-section">
-                    <Link to="/orders" className="orders-link header-link">
-                        <span className="orders-text">Orders</span>
-                    </Link>
-
-                    <Link to="/checkout" className="cart-link header-link">
-                        <img className="cart-icon" src="/images/icons/cart-icon.png" />
-                        <div className="cart-quantity">3</div>
-                        <div className="cart-text">Cart</div>
-                    </Link>
-                </div>
-            </div>
-
-            <Header cart={cart} />
+            <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearch={handleSearch} isLoading={isLoading} />
 
             <div className="home-page">
                 <div className="products-grid">
@@ -70,7 +78,7 @@ export function HomePage({cart}) {
 
                             <div className="product-rating-container">
                                 <img className="product-rating-stars"
-                                    src={`images/ratings/rating-${product.rating.stars * 10}.png`} />
+                                    src={`/images/ratings/rating-${product.rating.stars * 10}.png`} />
                                 <div className="product-rating-count link-primary">
                                 {product.rating.count}
                                 </div>
@@ -81,7 +89,7 @@ export function HomePage({cart}) {
                             </div>
 
                             <div className="product-quantity-container">
-                                <select>
+                                <select id={`quantity-${product.id}`}>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -97,17 +105,27 @@ export function HomePage({cart}) {
 
                             <div className="product-spacer"></div>
 
-                            <div className="added-to-cart">
-                                <img src="images/icons/checkmark.png" />
+                            <div className={`added-to-cart ${addedToCart[product.id] ? 'visible' : ''}`}>
+                                <img src="/images/icons/checkmark.png" />
                                 Added
                             </div>
 
-                            <button className="add-to-cart-button button-primary">
+                            <button className="add-to-cart-button button-primary" onClick={() => {
+                                const select = document.getElementById(`quantity-${product.id}`);
+                                const quantity = parseInt(select.value);
+                                handleAddToCart(product.id, quantity);
+                            }}>
                                 Add to Cart
                             </button>
                         </div>
                     ))}
                 </div>
+
+                {products.length === 0 && searchQuery && (
+                    <div className="no-results-message">
+                        No product match your search
+                    </div>
+                )}
             </div>
         </>
     );

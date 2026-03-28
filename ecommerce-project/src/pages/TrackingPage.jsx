@@ -1,43 +1,73 @@
 import './header.css';
 import './TrackingPage.css';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Header } from '../components/header';
+import './Loading.css';
 
 export function TrackingPage() {
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get('orderId');
+    const [order, setOrder] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (orderId) {
+            const loadOrder = async () => {
+                const startTime = Date.now();
+                try {
+                    console.log('Starting to load order for tracking...');
+                    const response = await axios.get(`/api/orders/${orderId}?expand=products`);
+                    console.log('Order loaded successfully');
+                    setOrder(response.data);
+                } catch (error) {
+                    console.error('Error fetching order:', error);
+                } finally {
+                    // Ensure loading screen shows for at least 1 second
+                    const elapsed = Date.now() - startTime;
+                    const remaining = Math.max(0, 1000 - elapsed);
+                    setTimeout(() => {
+                        console.log('Setting isLoading to false for tracking');
+                        setIsLoading(false);
+                    }, remaining);
+                }
+            };
+            loadOrder();
+        } else {
+            setIsLoading(false);
+        }
+    }, [orderId]);
+
+    const handleSearch = () => {
+        // No search functionality on tracking page
+    };
+
+    const getProgressStatus = (deliveryTime) => {
+        const now = new Date();
+        const delivery = new Date(deliveryTime);
+        const diffDays = Math.ceil((delivery - now) / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0) return 'Delivered';
+        if (diffDays <= 3) return 'Shipped';
+        return 'Preparing';
+    };
+
+    const deliveryDate = order?.products?.[0]?.estimatedDeliveryTimeMs ? new Date(order.products[0].estimatedDeliveryTimeMs).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : 'Unknown';
+
     return (
+        <>
+        {isLoading ? (
+            <div className="loading-screen">
+                <div className="loading-spinner"></div>
+                <p>Loading tracking...</p>
+            </div>
+        ) : (
         <>
          <title>Tracking</title>
 
-            <div className="header">
-                <div className="left-section">
-                    <Link to="/" className="header-link">
-                        <img className="logo"
-                            src="/images/logo-white.png" />
-                        <img className="mobile-logo"
-                            src="/images/mobile-logo-white.png" />
-                    </Link>
-                </div>
-
-                <div className="middle-section">
-                    <input className="search-bar" type="text" placeholder="Search" />
-
-                    <button className="search-button">
-                        <img className="search-icon" src="/images/icons/search-icon.png" />
-                    </button>
-                </div>
-
-                <div className="right-section">
-                    <Link className="orders-link header-link" to="/orders">
-
-                        <span className="orders-text">Orders</span>
-                    </Link>
-
-                    <Link className="cart-link header-link" to="/checkout">
-                        <img className="cart-icon" src="/images/icons/cart-icon.png" />
-                        <div className="cart-quantity">3</div>
-                        <div className="cart-text">Cart</div>
-                    </Link>
-                </div>
-            </div>
+            <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearch={handleSearch} />
 
             <div className="tracking-page">
                 <div className="order-tracking">
@@ -46,36 +76,46 @@ export function TrackingPage() {
                     </Link>
 
                     <div className="delivery-date">
-                        Arriving on Monday, June 13
+                        Order arriving on {deliveryDate}
                     </div>
 
-                    <div className="product-info">
-                        Black and Gray Athletic Cotton Socks - 6 Pairs
-                    </div>
+                    {order?.products?.map((item, index) => {
+                        const product = item.product;
+                        const status = getProgressStatus(item.estimatedDeliveryTimeMs);
+                        return (
+                            <div key={index} className="product-tracking">
+                                <div className="product-info">
+                                    {product?.name || 'Product Name'}
+                                </div>
 
-                    <div className="product-info">
-                        Quantity: 1
-                    </div>
+                                <div className="product-info">
+                                    Quantity: {item.quantity || 1}
+                                </div>
 
-                    <img className="product-image" src="/images/products/athletic-cotton-socks-6-pairs.jpg" />
+                                <img className="product-image" src={product?.image ? (product.image.startsWith('/') ? product.image : `/${product.image}`) : '/images/products/athletic-cotton-socks-6-pairs.jpg'} />
 
-                    <div className="progress-labels-container">
-                        <div className="progress-label">
-                            Preparing
-                        </div>
-                        <div className="progress-label current-status">
-                            Shipped
-                        </div>
-                        <div className="progress-label">
-                            Delivered
-                        </div>
-                    </div>
+                                <div className="progress-labels-container">
+                                    <div className={`progress-label ${status === 'Preparing' ? 'current-status' : ''}`}>
+                                        Preparing
+                                    </div>
+                                    <div className={`progress-label ${status === 'Shipped' ? 'current-status' : ''}`}>
+                                        Shipped
+                                    </div>
+                                    <div className={`progress-label ${status === 'Delivered' ? 'current-status' : ''}`}>
+                                        Delivered
+                                    </div>
+                                </div>
 
-                    <div className="progress-bar-container">
-                        <div className="progress-bar"></div>
-                    </div>
+                                <div className="progress-bar-container">
+                                    <div className="progress-bar"></div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
+        </>
+        )}
         </>
     );
 }

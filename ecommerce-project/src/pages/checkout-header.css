@@ -23,16 +23,35 @@
 }
 
 .checkout-header .checkout-header-left-section {
-  width: 200px;
+  width: 250px;
+  display: flex;
+  align-items: center;
 }
 
-.checkout-header .logo {
-  height: 26px;
-  margin-top: 0px;
+..checkout-header .logo {
+  height: 40px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  margin-top: 0;
 }
 
 .checkout-header .mobile-logo {
   display: none;
+}
+
+.checkout-header .logo-link,
+.checkout-header .logo-link:visited,
+.checkout-header .return-to-home-link,
+.checkout-header .return-to-home-link:visited {
+  text-decoration: none;
+}
+
+.checkout-header .brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-left: 8px;
+  color: rgb(0, 128, 0);
 }
 
 /* @media is used to create responsive design (making the
